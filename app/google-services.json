@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "218271328718",
+    "firebase_url": "https://defilm-6f74f.firebaseio.com",
+    "project_id": "defilm-6f74f",
+    "storage_bucket": "defilm-6f74f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218271328718:android:cc847c5907b62b47",
+        "android_client_info": {
+          "package_name": "edu.bluejack182.defilm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218271328718-2qoe749vrbnabn9et704el5nfr3rv9kd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.bluejack182.defilm",
+            "certificate_hash": "9992c6f2d4ffea9bce69c3446745c0f9aaaf4da3"
+          }
+        },
+        {
+          "client_id": "218271328718-bujmiv23q9tem25jr0bhjn2qechsihkf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC83pmrFszcit-5C4ukzpQZa563BdTAV80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218271328718-bujmiv23q9tem25jr0bhjn2qechsihkf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
