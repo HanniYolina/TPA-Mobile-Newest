@@ -18,23 +18,22 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:clickable="true"
         android:src="@drawable/ic_play_circle_outline_black_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/slider_title"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/slider_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="215dp"
-        android:text="TextView"
-        android:textSize="20sp"
-        android:textStyle="bold"
+<!--    <TextView-->
+<!--        android:id="@+id/slider_title"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="215dp"-->
+<!--        android:text="TextView"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textStyle="bold"-->
 
-        app:layout_constraintTop_toTopOf="@+id/slider_comingsoon" />
+<!--        app:layout_constraintTop_toTopOf="@+id/slider_comingsoon" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

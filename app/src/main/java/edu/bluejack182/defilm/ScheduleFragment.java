@@ -1,6 +1,7 @@
 package edu.bluejack182.defilm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -9,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Calendar;
 
 
 /**
@@ -65,7 +68,17 @@ public class ScheduleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragments
+
+//        Calendar calendarEvent = Calendar.getInstance();
+//        Intent intent = new Intent(Intent.ACTION_EDIT);
+//        intent.setType("vnd.android.cursor.item/event");
+//        intent.putExtra("beginTime", calendarEvent.getTimeInMillis());
+//        intent.putExtra("endTime", calendarEvent.getTimeInMillis() + 60 * 60 * 1000);
+//        intent.putExtra("title", "Sample Event");
+//        intent.putExtra("allDay", true);
+//        intent.putExtra("rule", "FREQ=YEARLY");
+//        startActivity(intent);
         return inflater.inflate(R.layout.fragment_schedule, container, false);
     }
 

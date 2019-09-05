@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final String keyRemember = "remember";
     private static final String keyEmail = "email";
     private static final String keyPass = "password";
+    private static final String keyUser = "user";
 
 
     private DatabaseReference databaseReference;
@@ -94,7 +95,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot sp : dataSnapshot.getChildren()){
-                    if(sp.getValue(User.class).getPassword().equals(enteredPass)){
+                    User user = sp.getValue(User.class);
+
+                    if(user.getPassword().equals(enteredPass)){
+                        editor.putString(keyUser, sp.getKey() + "");
+                        editor.apply();
+
                         Intent intent = new Intent(context, HomeActivity.class);
                         startActivity(intent);
                         finish();

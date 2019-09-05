@@ -2,6 +2,7 @@ package edu.bluejack182.defilm;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,10 @@ public class CustomAdapter extends ArrayAdapter<Movie> {
         this.context = context;
         this.layoutResourceId = resource;
         this.data = objects;
+        for(Movie m : objects){
+            Log.d("Tes", m.toString());
+        }
+        Log.d("get view", "tes");
     }
 
     static class DataHolder{
@@ -49,9 +54,9 @@ public class CustomAdapter extends ArrayAdapter<Movie> {
         }
 
         Movie movie = data.get(position);
-        dataHolder.img.setImageResource(movie.image);
-        dataHolder.title.setText(movie.title);
-        dataHolder.rating.setText(movie.rating.toString());
+        new DownloadImageTask(dataHolder.img).execute(movie.getPoster());
+        dataHolder.title.setText(movie.getTitle());
+        dataHolder.rating.setText(movie.getImdbRating());
 
         return convertView;
     }

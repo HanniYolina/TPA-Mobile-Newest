@@ -72,25 +72,25 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
-
-        List<Movie> movieList = new ArrayList<>();
-        movieList.add(new Movie(R.drawable.poster_dumbo, "Dumbo", 3.7f));
-        movieList.add(new Movie(R.drawable.poster_toystory, "Toy Story", 3.7f));
-        movieList.add(new Movie(R.drawable.poster_toystory, "Toy Story", 3.7f));
-        final ListView listView = view.findViewById(R.id.list_movie);
-
-        CustomAdapter customAdapter = new CustomAdapter(getContext(), R.layout.movie_list_layout, movieList);
-        listView.setAdapter(customAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                Object o = listView.getItemAtPosition(position);
-                Intent intent = new Intent(getContext(), MovieDetailActivity.class);
-                startActivity(intent);
-            }
-        });
+//
+//        List<Movie> movieList = new ArrayList<>();
+//        movieList.add(new Movie(R.drawable.poster_dumbo, "Dumbo", 3.7f));
+//        movieList.add(new Movie(R.drawable.poster_toystory, "Toy Story", 3.7f));
+//        movieList.add(new Movie(R.drawable.poster_toystory, "Toy Story", 3.7f));
+//        final ListView listView = view.findViewById(R.id.list_movie);
+//
+//        CustomAdapter customAdapter = new CustomAdapter(getContext(), R.layout.movie_list_layout, movieList);
+//        listView.setAdapter(customAdapter);
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+//                Object o = listView.getItemAtPosition(position);
+//                Intent intent = new Intent(getContext(), MovieDetailActivity.class);
+//                startActivity(intent);
+//            }
+//        });
         return view;
     }
 

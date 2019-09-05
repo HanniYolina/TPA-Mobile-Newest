@@ -23,59 +23,47 @@ import java.util.List;
 
 public class SliderPagerAdapter extends PagerAdapter {
     private Context context;
-    private List<Slide> slideList;
+    private List<Movie> movieList;
 
-    public SliderPagerAdapter(Context context, List<Slide> slideList) {
+    SliderPagerAdapter(Context context, List<Movie> movieList) {
         this.context = context;
-        this.slideList = slideList;
+        this.movieList = movieList;
+    }
+
+    public void setMovieList(List<Movie> movieList) {
+        this.movieList = movieList;
     }
 
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View slideLayout = inflater.inflate(R.layout.slider_item, null);
 
         ImageView slideImg = slideLayout.findViewById(R.id.slider_comingsoon);
-        TextView slideText = slideLayout.findViewById(R.id.slider_title);
-
-//        URL url = null;
-//        try {
-//            url = new URL("https://m.media-amazon.com/images/M/MV5BZjE2MGVkMTAtMWIwYy00YzQ5LWE2YTAtMTU2NGJmNGNjY2IyXkEyXkFqcGdeQXVyNjMxMzM3NDI@._V1_SX300.jpg");
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
-//        Bitmap bmp = null;
-//        try {
-//            bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//            slideImg.setImageBitmap(bmp);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
 //        slideImg.setImageURI(Uri.parse("https://m.media-amazon.com/images/M/MV5BZjE2MGVkMTAtMWIwYy00YzQ5LWE2YTAtMTU2NGJmNGNjY2IyXkEyXkFqcGdeQXVyNjMxMzM3NDI@._V1_SX300.jpg"));
 //        slideImg.setImageResource(slideList.get(position).getImage());
-
-        new DownloadImageTask(slideImg)
-                .execute("https://m.media-amazon.com/images/M/MV5BZjE2MGVkMTAtMWIwYy00YzQ5LWE2YTAtMTU2NGJmNGNjY2IyXkEyXkFqcGdeQXVyNjMxMzM3NDI@._V1_SX300.jpg");
-
-
-//        slideText.setText(slideList.get(position).getTitle());
+//
+            new DownloadImageTask(slideImg).execute(movieList.get(position).getPoster());
 
         slideLayout.findViewById(R.id.floatingActionButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, MovieDetailActivity.class);
+                intent.putExtra("movie", movieList.get(position));
                 context.startActivity(intent);
+
             }
         });
+
         container.addView(slideLayout);
         return slideLayout;
     }
 
     @Override
     public int getCount() {
-        return slideList.size();
+        return movieList.size();
     }
 
     @Override
