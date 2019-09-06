@@ -1,6 +1,7 @@
 package edu.bluejack182.defilm;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -16,6 +17,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.LoginManager;
+import com.facebook.FacebookCallback;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final String keyPass = "password";
     private static final String keyUser = "user";
 
+    CallbackManager callbackManager;
 
     private DatabaseReference databaseReference;
 
@@ -49,6 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         final Button btn = findViewById(R.id.btn_login);
         btn.setOnClickListener(this);
+
 
         txtEmail = findViewById(R.id.edt_email);
         txtPassword = findViewById(R.id.edt_password);
@@ -69,6 +79,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         txtEmail.addTextChangedListener(this);
         txtPassword.addTextChangedListener(this);
         chkRemember.setOnCheckedChangeListener(this);
+
+        callbackManager = CallbackManager.Factory.create();
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+//                        Toast.makeText(LoginActivity.this, "Dah login ngapain", Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+//                        startActivity(intent);
+//                        finish();
+
+                        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+                        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
+
+
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // kalo cancel login
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // kalo error ngapain
+                    }
+                });
+
+
     }
 
     public void redirectRegister(android.view.View view){
@@ -150,5 +191,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             editor.remove(keyPass);
             editor.apply();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        callbackManager.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

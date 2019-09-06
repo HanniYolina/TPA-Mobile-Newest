@@ -2,6 +2,9 @@
     <string name="app_name">De\'Film</string>
     <string name="title_activity_home"></string>
 
+    <string name="facebook_app_id">376760149666819</string>
+    <string name="fb_login_protocol_scheme">fb376760149666819</string>
+
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
