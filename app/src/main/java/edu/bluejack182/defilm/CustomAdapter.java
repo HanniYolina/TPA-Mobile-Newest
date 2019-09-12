@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class CustomAdapter extends ArrayAdapter<Movie> {
         Movie movie = data.get(position);
         new DownloadImageTask(dataHolder.img).execute(movie.getPoster());
         dataHolder.title.setText(movie.getTitle());
+//        Toast.makeText(context, movie.getImdbRating(), Toast.LENGTH_SHORT).show();
         dataHolder.rating.setText(movie.getImdbRating());
 
         return convertView;

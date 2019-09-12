@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ResultFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+<!--    <LinearLayout-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
+        <TextView
+            android:id="@+id/history_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="#cc9c99"
+            android:textSize="14sp"
+            />
+
+        <ListView
+            android:id="@+id/list_search_result"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+<!--    </LinearLayout>-->
+
+
+</FrameLayout>

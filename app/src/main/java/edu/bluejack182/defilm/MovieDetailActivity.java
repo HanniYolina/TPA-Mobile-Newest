@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -44,6 +46,8 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     private TextView runtimeView;
     private TextView ratingView;
     private VideoView videoView;
+    private EditText txtReview;
+    private RatingBar ratingBar;
 
     private DatabaseReference databaseReference;
     SharedPreferences sharedPreferences;
@@ -182,6 +186,48 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
+
+        Query query2 = databaseReference.child("Users").orderByChild("email").equalTo(sharedPreferences.getString("email", "")).limitToFirst(1);
+
+        query2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (final DataSnapshot sp : dataSnapshot.getChildren()){
+                    Query query2 = databaseReference.child("Users").child(sp.getKey()).child("historyView").orderByChild("imdbID").equalTo(movie.getImdbID());
+
+                    query2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(!dataSnapshot.exists()){
+                                databaseReference.child("Users").child(sp.getKey()).child("historyView").child(movie.getImdbID()).setValue(movie);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        ratingBar = findViewById(R.id.rating_bar);
+        ratingBar.setNumStars(5);
+        ratingBar.setOnClickListener(this);
+
+        final Button btn = findViewById(R.id.btn_add_review);
+        btn.setOnClickListener(this);
+
+        txtReview = findViewById(R.id.txt_review);
     }
 
     @Override
@@ -218,7 +264,27 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
                                 }
                             });
 
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                break;
+            case R.id.btn_add_review:
+                Query query1 = databaseReference.child("movies").orderByChild("imdbID").equalTo(movie.getImdbID()).limitToFirst(1);
+
+                query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        for (final DataSnapshot sp : dataSnapshot.getChildren()){
+                            databaseReference.child("movies").child(sp.getKey()).child("review").child(sharedPreferences.getString("user", "")).child("text").setValue(txtReview.getText().toString());
+                            databaseReference.child("movies").child(sp.getKey()).child("review").child(sharedPreferences.getString("user", "")).child("rating").setValue(ratingBar.getRating());
+                            Toast.makeText(MovieDetailActivity.this,sp.getKey() , Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(MovieDetailActivity.this,txtReview.getText().toString() , Toast.LENGTH_SHORT).show();
                         }
                     }
 

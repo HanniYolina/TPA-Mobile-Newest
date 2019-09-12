@@ -13,16 +13,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,41 +32,37 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link HistoryFragment.OnFragmentInteractionListener} interface
+ * {@link ResultFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link HistoryFragment#newInstance} factory method to
+ * Use the {@link ResultFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HistoryFragment extends Fragment {
+public class ResultFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String MOVIE = "movie";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private List<Movie> movieList;
 
     private OnFragmentInteractionListener mListener;
 
-    public HistoryFragment() {
+    public ResultFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HistoryFragment.
-     */
+
     // TODO: Rename and change types and number of parameters
-    public static HistoryFragment newInstance(String param1, String param2) {
-        HistoryFragment fragment = new HistoryFragment();
+    public static ResultFragment newInstance(ArrayList<Movie> movies) {
+        ResultFragment fragment = new ResultFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(MOVIE, movies);
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,50 +71,23 @@ public class HistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            movieList = (ArrayList<Movie>) getArguments().getSerializable(MOVIE);
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
-    private DatabaseReference databaseReference;
-    private SharedPreferences sharedPreferences;
-    CustomAdapter customAdapter;
-
-    View view;
-    final List<Movie> movieList = new ArrayList<>();;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_history, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_result, container, false);
+        final ListView listView = view.findViewById(R.id.list_search_result);
 
-        sharedPreferences = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+//        Toast.makeText(getContext(), "if", Toast.LENGTH_SHORT).show();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-
-        customAdapter = new CustomAdapter(getContext(), R.layout.movie_list_layout, movieList);
-
-        Query query1 = databaseReference.child("Users").child(sharedPreferences.getString("user", "")).child("historyView");
-        query1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot sp : dataSnapshot.getChildren()){
-
-                    movieList.add(sp.getValue(Movie.class));
-                }
-                customAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        final ListView listView = view.findViewById(R.id.history_list);
-
-
+        CustomAdapter customAdapter;
+        customAdapter = new CustomAdapter(container.getContext(), R.layout.movie_list_layout, movieList);
         listView.setAdapter(customAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -128,6 +99,25 @@ public class HistoryFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        final TextView historySearch = view.findViewById(R.id.history_search);
+
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        Query query1 = FirebaseDatabase.getInstance().getReference().child("Users").child(sharedPreferences.getString("user", "")).child("historySearch");
+
+        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                historySearch.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+//        Toast.makeText(this.getActivity(), query1.toString(), Toast.LENGTH_SHORT).show();
 
         return view;
     }

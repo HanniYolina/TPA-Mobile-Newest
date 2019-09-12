@@ -10,6 +10,7 @@
         android:id="@+id/btn_search"
         android:title=""
         android:icon="@drawable/ic_search_white_24dp"
+        android:onClick="openSearchFragment"
         app:showAsAction="always"
         />
 </menu>

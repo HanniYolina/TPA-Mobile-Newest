@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2e2f21"
+    tools:context=".SearchFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#a16966"
+        android:hint="Title"
+        android:textColorHint="#a16966"
+        android:padding="10dp"
+        />
+
+    <EditText
+        android:id="@+id/txt_genre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#a16966"
+        android:hint="Genre"
+        android:textColorHint="#a16966"
+        android:padding="10dp"
+        />
+
+    <EditText
+        android:id="@+id/txt_rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#a16966"
+        android:hint="Rating"
+        android:textColorHint="#a16966"
+        android:padding="10dp"
+        />
+
+    <Button
+        android:id="@+id/btn_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filter"
+        android:textColor="@android:color/black"
+        android:background="#a16966"
+        android:textSize="18dp"
+        />
+
+    <ListView
+        android:id="@+id/list_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+    </LinearLayout>
+</FrameLayout>

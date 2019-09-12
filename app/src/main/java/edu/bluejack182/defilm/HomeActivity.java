@@ -1,5 +1,6 @@
 package edu.bluejack182.defilm;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -23,13 +24,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.Menu;
+import android.widget.Toast;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HomeFragment.OnFragmentInteractionListener,
         MovieListFragment.OnFragmentInteractionListener,
         ScheduleFragment.OnFragmentInteractionListener,
-        HistoryFragment.OnFragmentInteractionListener{
+        HistoryFragment.OnFragmentInteractionListener,
+        SearchFragment.OnFragmentInteractionListener
+{
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +114,14 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void openSearchFragment(MenuItem item){
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.replace(R.id.frame_home, new SearchFragment());
+//        ft.commit();
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
     }
 
     @Override
