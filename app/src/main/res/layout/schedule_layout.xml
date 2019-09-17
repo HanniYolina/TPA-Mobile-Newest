@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#2e2f21"
+    android:gravity="center"
+    android:padding="4dp"
+    >
+
+    <TextView
+        android:id="@+id/txt_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tes"
+        android:textSize="14sp"
+        android:textColor="#a16966"
+        android:padding="4dp"
+        />
+
+    <Button
+        android:id="@+id/btn_del_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#a16966"
+        android:text="delete"
+        android:padding="4dp"
+        />
+
+</LinearLayout>

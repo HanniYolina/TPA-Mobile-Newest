@@ -12,9 +12,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     private ViewPager sliderpager;
     private List<Movie> movieList;
     private Button btnAddToMovieList;
+    private Button btnShowReview;
 
     private ImageView posterView;
     private TextView titleView;
@@ -52,6 +55,8 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     private DatabaseReference databaseReference;
     SharedPreferences sharedPreferences;
 
+    private List<Review> reviewList;
+
     Movie movie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +69,11 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
         movie = (Movie) getIntent().getSerializableExtra("movie");
         final String genres[] = movie.getGenre().split(", ");
 
-        Uri uri = Uri.parse("http://videocdn.bodybuilding.com/video/mp4/62000/62792m.mp4");
+        Uri uri = Uri.parse("");
+
+        if(movie.getVideo() != null){
+            uri = Uri.parse(movie.getVideo());
+        }
 
 //        videoView.requestFocus();
 
@@ -111,6 +120,9 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
         btnAddToMovieList = findViewById(R.id.btn_add_to_movielist);
         btnAddToMovieList.setOnClickListener(this);
 
+        btnShowReview = findViewById(R.id.btn_show_review);
+        btnShowReview.setOnClickListener(this);
+
         videoView = findViewById(R.id.video_trailer);
         posterView = findViewById(R.id.detail_poster_img_view);
         titleView = findViewById(R.id.txt_title);
@@ -150,7 +162,6 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
         MediaController mediaController = new MediaController(this);
         videoView.setMediaController(mediaController);
         mediaController.setAnchorView(videoView);
-
         Query query1 = databaseReference.child("Users").orderByChild("email").equalTo(sharedPreferences.getString("email", "")).limitToFirst(1);
 
         query1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -186,6 +197,7 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
+
 
         Query query2 = databaseReference.child("Users").orderByChild("email").equalTo(sharedPreferences.getString("email", "")).limitToFirst(1);
 
@@ -228,6 +240,55 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
         btn.setOnClickListener(this);
 
         txtReview = findViewById(R.id.txt_review);
+
+        reviewList = new ArrayList<>();
+        reviewList.add(new Review(5, "test", "test 2"));
+        final ReviewAdapter reviewAdapter = new ReviewAdapter(MovieDetailActivity.this, R.layout.review_detail, reviewList);
+        final ListView listView = findViewById(R.id.list_review);
+        listView.setAdapter(reviewAdapter);
+        reviewAdapter.notifyDataSetChanged();
+
+        Query query3 = databaseReference.child("movies").orderByChild("imdbID").equalTo(movie.getImdbID()).limitToFirst(1);
+
+        query3.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (final DataSnapshot sp : dataSnapshot.getChildren()){
+//                    Movie movie = sp.getValue(Movie.class);
+//                    Toast.makeText(MovieDetailActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
+
+                    Query query4 = databaseReference.child("movies").child(sp.getKey()).child("review");
+
+                    query4.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (final DataSnapshot sp : dataSnapshot.getChildren()){
+                                Review review = sp.getValue(Review.class);
+                                Toast.makeText(MovieDetailActivity.this, review.getText(), Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(MovieDetailActivity.this, sp.getKey(), Toast.LENGTH_SHORT).show();
+//                                Log.d("tes", sp.getKey());
+                                reviewList.add(review);
+                                Log.d("x", review.getText());
+                            }
+                            reviewAdapter.notifyDataSetChanged();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -293,6 +354,16 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
 
                     }
                 });
+                break;
+            case R.id.btn_show_review:
+                View v = findViewById(R.id.layout_review);
+                if(v.getVisibility() == View.GONE){
+                    v.setVisibility(View.VISIBLE);
+                }else{
+                    v.setVisibility(View.GONE);
+                }
+
+
                 break;
         }
     }

@@ -24,10 +24,10 @@ public class CustomAdapter extends ArrayAdapter<Movie> {
         this.context = context;
         this.layoutResourceId = resource;
         this.data = objects;
-        for(Movie m : objects){
-            Log.d("Tes", m.toString());
-        }
-        Log.d("get view", "tes");
+//        for(Movie m : objects){
+//            Log.d("Tes", m.toString());
+//        }
+//        Log.d("get view", "tes");
     }
 
     static class DataHolder{

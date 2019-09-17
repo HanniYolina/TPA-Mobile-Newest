@@ -12,13 +12,30 @@
         android:layout_height="match_parent"
         android:gravity="center"
         >
-        <CalendarView
-            android:layout_width="wrap_content"
-            android:layout_height="360dp"
-            android:layout_gravity="center"
+<!--        <CalendarView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="360dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            />-->
+
+        <com.github.sundeepk.compactcalendarview.CompactCalendarView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/compactcalendar_view"
+            android:layout_width="fill_parent"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:layout_height="250dp"
+            app:compactCalendarTargetHeight="250dp"
+            app:compactCalendarTextSize="12sp"
+            app:compactCalendarBackgroundColor="#ffe95451"
+            app:compactCalendarTextColor="#fff"
+            app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
+            app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
+            app:compactCalendarMultiEventIndicatorColor="#fff"
             />
 
         <TextView
+            android:id="@+id/txt_month"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -27,5 +44,43 @@
             android:text="Description"
             android:textAlignment="center"
             />
+
+        <TextView
+            android:id="@+id/txt_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Date"
+            android:textAlignment="center"
+            />
+
+        <EditText
+            android:id="@+id/edt_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="10sp"
+            android:textColor="#cc9c99"
+            android:backgroundTint="#cc9c99"
+            />
+
+        <Button
+            android:id="@+id/btn_add_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Event"
+            android:textColor="@android:color/black"
+            android:background="#a16966"
+            android:textSize="18dp"
+            />
+
+        <ListView
+            android:id="@+id/list_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
     </LinearLayout>
 </FrameLayout>

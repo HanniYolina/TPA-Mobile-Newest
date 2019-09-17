@@ -32,6 +32,7 @@ public class Movie implements Serializable {
     private String Production;
     private String Website;
     private String Response;
+    private String Video;
 //    private Map<String, Object> AdditionalProperties = new HashMap<String, Object>();
 
     /**
@@ -41,35 +42,7 @@ public class Movie implements Serializable {
     public Movie() {
     }
 
-    /**
-     *
-     * @param genre
-     * @param metascore
-     * @param imdbVotes
-     * @param runtime
-     * @param imdbID
-     * @param type
-     * @param production
-     * @param plot
-     * @param response
-     * @param released
-     * @param imdbRating
-     * @param title
-     * @param actors
-     * @param year
-     * @param writer
-     * @param boxOffice
-     * @param website
-     * @param director
-     * @param dVD
-     * @param country
-     * @param awards
-     * @param poster
-     * @param language
-     * @param rated
-     * @param ratings
-     */
-    public Movie(String title, String year, String rated, String released, String runtime, String genre, String director, String writer, String actors, String plot, String language, String country, String awards, String poster, List<Rating> ratings, String metascore, String imdbRating, String imdbVotes, String imdbID, String type, String DVD, String boxOffice, String production, String website, String response, Map<String, Object> additionalProperties) {
+    public Movie(String title, String year, String rated, String released, String runtime, String genre, String director, String writer, String actors, String plot, String language, String country, String awards, String poster, List<Rating> ratings, String metascore, String imdbRating, String imdbVotes, String imdbID, String type, String DVD, String boxOffice, String production, String website, String response, String video, Map<String, Object> additionalProperties) {
         Title = title;
         Year = year;
         Rated = rated;
@@ -95,6 +68,7 @@ public class Movie implements Serializable {
         Production = production;
         Website = website;
         Response = response;
+        Video = video;
 //        AdditionalProperties = additionalProperties;
     }
 
@@ -305,4 +279,12 @@ public class Movie implements Serializable {
 //    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
 //        AdditionalProperties = additionalProperties;
 //    }
+
+    public String getVideo() {
+        return Video;
+    }
+
+    public void setVideo(String video) {
+        Video = video;
+    }
 }

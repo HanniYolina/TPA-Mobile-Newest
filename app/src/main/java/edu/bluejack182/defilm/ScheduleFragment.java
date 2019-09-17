@@ -2,16 +2,45 @@ package edu.bluejack182.defilm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.github.sundeepk.compactcalendarview.domain.Event;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+
+import edu.bluejack182.defilm.ui.main.Schedule;
 
 
 /**
@@ -22,7 +51,7 @@ import java.util.Calendar;
  * Use the {@link ScheduleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ScheduleFragment extends Fragment {
+public class ScheduleFragment extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -65,6 +94,18 @@ public class ScheduleFragment extends Fragment {
         }
     }
 
+    CompactCalendarView compactCalendarView;
+    SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM - yyyy", Locale.getDefault());
+
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    TextView txtDate;
+    TextView month;
+    EditText edtDesc;
+    Button btnAddEvent;
+    ListView listView;
+
+    ArrayList<Schedule> scheduleList = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,7 +120,61 @@ public class ScheduleFragment extends Fragment {
 //        intent.putExtra("allDay", true);
 //        intent.putExtra("rule", "FREQ=YEARLY");
 //        startActivity(intent);
-        return inflater.inflate(R.layout.fragment_schedule, container, false);
+
+        final View view = inflater.inflate(R.layout.fragment_schedule, container, false);
+        compactCalendarView = view.findViewById(R.id.compactcalendar_view);
+
+        //set month
+        month = view.findViewById(R.id.txt_month);
+        String date = monthFormat.format(compactCalendarView.getFirstDayOfCurrentMonth());
+        month.setText(date);
+
+        txtDate = view.findViewById(R.id.txt_date);
+        edtDesc = view.findViewById(R.id.edt_desc);
+        btnAddEvent = view.findViewById(R.id.btn_add_desc);
+        btnAddEvent.setOnClickListener(this);
+        listView = view.findViewById(R.id.list_description);
+
+
+        txtDate.setText(new Date().toString());
+
+//        Date clickedDate = null;
+//        try {
+//            clickedDate = dateFormat.parse("20/09/2019");
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//        final Event event = new Event(Color.GRAY, clickedDate.getTime(), "Testing day");
+//        compactCalendarView.addEvent(event);
+        compactCalendarView.setUseThreeLetterAbbreviation(true);
+
+        getEventFromFirebase(view);
+
+        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+            @Override
+            public void onDayClick(Date dateClicked) {
+                Context context = view.getContext();
+
+                txtDate.setText(dateClicked.toString());
+
+//                List<Event> eventList = compactCalendarView.getEvents(dateClicked);
+
+                scheduleList.removeAll(scheduleList);
+                getEventFromFirebase(view);
+
+
+            }
+
+            @Override
+            public void onMonthScroll(Date firstDayOfNewMonth) {
+                String date = monthFormat.format(compactCalendarView.getFirstDayOfCurrentMonth());
+                month.setText(date);
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -104,6 +199,115 @@ public class ScheduleFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void getEventFromFirebase(View view){
+//        compactCalendarView.removeAllEvents();
+
+        final ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getContext(), R.layout.schedule_layout, scheduleList);
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        Query query1 = databaseReference.child("Users").orderByChild("email").equalTo(sharedPreferences.getString("email", "")).limitToFirst(1);
+
+        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot sp : dataSnapshot.getChildren()){
+                    Query query2 = databaseReference.child("Users").child(sp.getKey()).child("schedule");
+
+                    query2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot sp : dataSnapshot.getChildren()){
+                                if(dataSnapshot.exists()){
+                                    Schedule schedule = sp.getValue(Schedule.class);
+
+                                    if(schedule.getDate().equals(txtDate.getText())){
+                                        scheduleList.add(schedule);
+
+                                        Event event = new Event(Color.GRAY, new Date(schedule.getDate()).getTime(), edtDesc.getText());
+                                        compactCalendarView.addEvent(event);
+
+                                    }
+
+                                    Log.d("Tes", schedule.getDate());
+
+                                }
+
+                                scheduleAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        final ListView listView = view.findViewById(R.id.list_description);
+
+
+        listView.setAdapter(scheduleAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+//                Intent intent = new Intent(getContext(), MovieDetailActivity.class);
+//                intent.putExtra("movie", movieList.get(position));
+//                startActivity(intent);
+            }
+        });
+
+
+
+    }
+
+    public void addEventToFirebase(){
+        final Date clickedDate = new Date(txtDate.getText().toString());
+
+
+        Event event = new Event(Color.GRAY, clickedDate.getTime(), edtDesc.getText());
+        compactCalendarView.addEvent(event);
+
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        Query query1 = databaseReference.child("Users").orderByChild("email").equalTo(sharedPreferences.getString("email", "")).limitToFirst(1);
+
+        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (final DataSnapshot sp : dataSnapshot.getChildren()){
+                    String id = UUID.randomUUID().toString();
+                    databaseReference.child("Users").child(sp.getKey()).child("schedule").child(id).child("date").setValue(clickedDate.toString());
+                    databaseReference.child("Users").child(sp.getKey()).child("schedule").child(id).child("description").setValue(edtDesc.getText().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btn_add_desc:
+                addEventToFirebase();
+                break;
+        }
     }
 
     /**

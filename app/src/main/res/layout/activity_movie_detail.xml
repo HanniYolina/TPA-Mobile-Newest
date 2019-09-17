@@ -146,32 +146,65 @@
             android:padding="8dp"
             />
 
-        <RatingBar
-            android:id="@+id/rating_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:scaleX="0.5"
-            android:scaleY="0.5"
-            android:layout_gravity="center"
-            />
-
-        <EditText
-            android:id="@+id/txt_review"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#cc9c99"
-            android:hint="Review"
-            android:padding="8dp"
-            />
-
         <Button
-            android:id="@+id/btn_add_review"
+            android:id="@+id/btn_show_review"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Review"
+            android:text="Show Review"
             android:background="#a16966"
             android:padding="8dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/layout_review"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            >
+
+            <ListView
+                android:id="@+id/list_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                />
+
+            <RatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:layout_gravity="center"
+                />
+
+            <EditText
+                android:id="@+id/txt_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#cc9c99"
+                android:hint="Review"
+                android:padding="8dp"
+                />
+
+            <Button
+                android:id="@+id/btn_add_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Review"
+                android:background="#a16966"
+                android:padding="8dp"
+                />
+        </LinearLayout>
+        <Button
+            android:id="@+id/btn_add_to_movielist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Add to movie list"
+            android:backgroundTint="#a16966"
+            android:textAlignment="center"
             />
 
         <TextView
@@ -189,15 +222,6 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:padding="4dp"
-            />
-
-        <Button
-            android:id="@+id/btn_add_to_movielist"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Add to movie list"
-            android:backgroundTint="#a16966"
-            android:textAlignment="center"
             />
     </LinearLayout>
 </ScrollView>
