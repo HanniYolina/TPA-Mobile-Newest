@@ -105,6 +105,21 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
     ListView listView;
 
     ArrayList<Schedule> scheduleList = new ArrayList<>();
+    ArrayList<Schedule> clickedScheduleList = new ArrayList<>();
+    ScheduleAdapter scheduleAdapter;
+
+    private void setClickedScheduleList(){
+        clickedScheduleList.clear();
+
+        for (Schedule s : scheduleList) {
+//                    Toast.makeText(getContext(), "Msk for", Toast.LENGTH_SHORT).show();
+            if(s.getDate().equals(txtDate.getText())){
+                clickedScheduleList.add(s);
+            }
+        }
+
+        scheduleAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -120,6 +135,8 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
 //        intent.putExtra("allDay", true);
 //        intent.putExtra("rule", "FREQ=YEARLY");
 //        startActivity(intent);
+
+        scheduleAdapter = new ScheduleAdapter(getContext(), R.layout.schedule_layout, clickedScheduleList);
 
         final View view = inflater.inflate(R.layout.fragment_schedule, container, false);
         compactCalendarView = view.findViewById(R.id.compactcalendar_view);
@@ -155,16 +172,9 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-                Context context = view.getContext();
-
                 txtDate.setText(dateClicked.toString());
 
-//                List<Event> eventList = compactCalendarView.getEvents(dateClicked);
-
-                scheduleList.removeAll(scheduleList);
-                getEventFromFirebase(view);
-
-
+                setClickedScheduleList();
             }
 
             @Override
@@ -201,10 +211,11 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
         mListener = null;
     }
 
+
+
     public void getEventFromFirebase(View view){
 //        compactCalendarView.removeAllEvents();
 
-        final ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getContext(), R.layout.schedule_layout, scheduleList);
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
         Query query1 = databaseReference.child("Users").orderByChild("email").equalTo(sharedPreferences.getString("email", "")).limitToFirst(1);
@@ -212,6 +223,8 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
         query1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                scheduleList.clear();
+                compactCalendarView.removeAllEvents();
                 for (DataSnapshot sp : dataSnapshot.getChildren()){
                     Query query2 = databaseReference.child("Users").child(sp.getKey()).child("schedule");
 
@@ -222,20 +235,19 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                                 if(dataSnapshot.exists()){
                                     Schedule schedule = sp.getValue(Schedule.class);
 
-                                    if(schedule.getDate().equals(txtDate.getText())){
+//                                    if(schedule.getDate().equals(txtDate.getText())){
                                         scheduleList.add(schedule);
 
                                         Event event = new Event(Color.GRAY, new Date(schedule.getDate()).getTime(), edtDesc.getText());
                                         compactCalendarView.addEvent(event);
-
-                                    }
+//
+//                                    }
 
                                     Log.d("Tes", schedule.getDate());
 
                                 }
-
-                                scheduleAdapter.notifyDataSetChanged();
                             }
+                            setClickedScheduleList();
                         }
 
                         @Override
@@ -274,7 +286,6 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
     public void addEventToFirebase(){
         final Date clickedDate = new Date(txtDate.getText().toString());
 
-
         Event event = new Event(Color.GRAY, clickedDate.getTime(), edtDesc.getText());
         compactCalendarView.addEvent(event);
 
@@ -291,6 +302,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                     databaseReference.child("Users").child(sp.getKey()).child("schedule").child(id).child("date").setValue(clickedDate.toString());
                     databaseReference.child("Users").child(sp.getKey()).child("schedule").child(id).child("description").setValue(edtDesc.getText().toString());
                 }
+                getEventFromFirebase(getView());
             }
 
             @Override
