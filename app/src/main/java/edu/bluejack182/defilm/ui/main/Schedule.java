@@ -1,18 +1,18 @@
 package edu.bluejack182.defilm.ui.main;
 
-import java.util.Date;
-
 public class Schedule {
     String description;
     String date;
+    String id;
 
     public Schedule() {
 
     }
 
-    public Schedule(String description, String date) {
+    public Schedule(String description, String date, String id) {
         this.description = description;
         this.date = date;
+        this.id = id;
     }
 
     public String getDescription() {
@@ -29,5 +29,13 @@ public class Schedule {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

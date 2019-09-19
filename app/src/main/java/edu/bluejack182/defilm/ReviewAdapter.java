@@ -55,10 +55,6 @@ public class ReviewAdapter extends ArrayAdapter<Review> {
 
         Review review = reviews.get(position);
 
-        Log.d("TEs", review.getText());
-        Log.d("TEs", reviews.size() + "");
-        Toast.makeText(context, "Halo" + review.getText(), Toast.LENGTH_SHORT).show();
-
         dataHolder.review.setText(review.getText());
         dataHolder.rating.setText(Double.toString(review.getRating()));
         dataHolder.user.setText(review.getUser());

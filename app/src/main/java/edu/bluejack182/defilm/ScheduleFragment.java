@@ -136,7 +136,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
 //        intent.putExtra("rule", "FREQ=YEARLY");
 //        startActivity(intent);
 
-        scheduleAdapter = new ScheduleAdapter(getContext(), R.layout.schedule_layout, clickedScheduleList);
+        scheduleAdapter = new ScheduleAdapter(this, R.layout.schedule_layout, clickedScheduleList);
 
         final View view = inflater.inflate(R.layout.fragment_schedule, container, false);
         compactCalendarView = view.findViewById(R.id.compactcalendar_view);
@@ -278,9 +278,6 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
 //                startActivity(intent);
             }
         });
-
-
-
     }
 
     public void addEventToFirebase(){
@@ -301,6 +298,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                     String id = UUID.randomUUID().toString();
                     databaseReference.child("Users").child(sp.getKey()).child("schedule").child(id).child("date").setValue(clickedDate.toString());
                     databaseReference.child("Users").child(sp.getKey()).child("schedule").child(id).child("description").setValue(edtDesc.getText().toString());
+                    databaseReference.child("Users").child(sp.getKey()).child("schedule").child(id).child("id").setValue(id);
                 }
                 getEventFromFirebase(getView());
             }

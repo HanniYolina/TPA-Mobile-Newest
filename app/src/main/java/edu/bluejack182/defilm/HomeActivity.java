@@ -32,7 +32,8 @@ public class HomeActivity extends AppCompatActivity
         MovieListFragment.OnFragmentInteractionListener,
         ScheduleFragment.OnFragmentInteractionListener,
         HistoryFragment.OnFragmentInteractionListener,
-        SearchFragment.OnFragmentInteractionListener
+        SearchFragment.OnFragmentInteractionListener,
+        ReviewRatingFragment.OnFragmentInteractionListener
 {
 
 
@@ -102,7 +103,8 @@ public class HomeActivity extends AppCompatActivity
             ft.replace(R.id.frame_home, new MovieListFragment());
             ft.commit();
         } else if (id == R.id.nav_rating) {
-
+            ft.replace(R.id.frame_home, new ReviewRatingFragment());
+            ft.commit();
         } else if (id == R.id.nav_schedule) {
             ft.replace(R.id.frame_home, new ScheduleFragment());
             ft.commit();

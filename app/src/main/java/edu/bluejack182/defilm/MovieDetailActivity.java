@@ -242,7 +242,7 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
         txtReview = findViewById(R.id.txt_review);
 
         reviewList = new ArrayList<>();
-        reviewList.add(new Review(5, "test", "test 2"));
+
         final ReviewAdapter reviewAdapter = new ReviewAdapter(MovieDetailActivity.this, R.layout.review_detail, reviewList);
         final ListView listView = findViewById(R.id.list_review);
         listView.setAdapter(reviewAdapter);

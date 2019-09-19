@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ScheduleFragment"
-    android:background="#f6e2e2">
+    android:background="#f6e2e2"
+    android:layout_margin="2dp"
+    >
 
     <LinearLayout
         android:orientation="vertical"
@@ -72,7 +74,7 @@
             android:text="Add Event"
             android:textColor="@android:color/black"
             android:background="#a16966"
-            android:textSize="18dp"
+            android:textSize="14dp"
             />
 
         <ListView

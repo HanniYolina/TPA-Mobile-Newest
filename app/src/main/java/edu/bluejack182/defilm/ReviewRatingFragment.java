@@ -1,7 +1,6 @@
 package edu.bluejack182.defilm;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,12 +8,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,12 +29,12 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link HistoryFragment.OnFragmentInteractionListener} interface
+ * {@link ReviewRatingFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link HistoryFragment#newInstance} factory method to
+ * Use the {@link ReviewRatingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HistoryFragment extends Fragment {
+public class ReviewRatingFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -47,7 +46,7 @@ public class HistoryFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public HistoryFragment() {
+    public ReviewRatingFragment() {
         // Required empty public constructor
     }
 
@@ -57,11 +56,11 @@ public class HistoryFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HistoryFragment.
+     * @return A new instance of fragment ReviewRatingFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HistoryFragment newInstance(String param1, String param2) {
-        HistoryFragment fragment = new HistoryFragment();
+    public static ReviewRatingFragment newInstance(String param1, String param2) {
+        ReviewRatingFragment fragment = new ReviewRatingFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -78,34 +77,50 @@ public class HistoryFragment extends Fragment {
         }
     }
 
-    private DatabaseReference databaseReference;
-    private SharedPreferences sharedPreferences;
-    CustomAdapter customAdapter;
-
-    View view;
-    final List<Movie> movieList = new ArrayList<>();
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_history, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_review_rating, container, false);
 
-        sharedPreferences = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        final List<Review> reviewList = new ArrayList<>();
+        final ReviewAdapter reviewAdapter = new ReviewAdapter(getContext(), R.layout.review_detail, reviewList);
+        final ListView listView = view.findViewById(R.id.list_review);
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        final SharedPreferences sharedPreferences = getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        listView.setAdapter(reviewAdapter);
 
-        customAdapter = new CustomAdapter(getContext(), R.layout.movie_list_layout, movieList);
+        Query query = databaseReference.child("movies");
 
-        Query query1 = databaseReference.child("Users").child(sharedPreferences.getString("user", "")).child("historyView");
-        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot sp : dataSnapshot.getChildren()){
+                for (final DataSnapshot sp : dataSnapshot.getChildren()){
+                    Query query2 = databaseReference.child("movies").child(sp.getKey()).child("review");
 
-                    movieList.add(sp.getValue(Movie.class));
+                    query2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (final DataSnapshot sp : dataSnapshot.getChildren()) {
+                                if (sharedPreferences.getString("user", "").equals(sp.getKey())) {
+                                    Review r = sp.getValue(Review.class);
+                                    reviewList.add(r);
+
+                                    Toast.makeText(getContext(), r.getText(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            reviewAdapter.notifyDataSetChanged();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
-                customAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -113,22 +128,6 @@ public class HistoryFragment extends Fragment {
 
             }
         });
-
-        final ListView listView = view.findViewById(R.id.history_list);
-
-
-        listView.setAdapter(customAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                Intent intent = new Intent(getContext(), MovieDetailActivity.class);
-                intent.putExtra("movie", movieList.get(position));
-                startActivity(intent);
-            }
-        });
-
         return view;
     }
 
