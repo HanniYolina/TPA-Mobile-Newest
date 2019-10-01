@@ -10,15 +10,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.MediaController;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -50,14 +46,12 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     private TextView ratingView;
     private VideoView videoView;
     private EditText txtReview;
-    private RatingBar ratingBar;
 
     private DatabaseReference databaseReference;
     SharedPreferences sharedPreferences;
 
-    private List<Review> reviewList;
-
     Movie movie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -232,62 +226,11 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
-        ratingBar = findViewById(R.id.rating_bar);
-        ratingBar.setNumStars(5);
-        ratingBar.setOnClickListener(this);
-
-        final Button btn = findViewById(R.id.btn_add_review);
-        btn.setOnClickListener(this);
+//        final Button btn = findViewById(R.id.btn_add_review);
+//        btn.setOnClickListener(this);
 
         txtReview = findViewById(R.id.txt_review);
 
-        reviewList = new ArrayList<>();
-
-        final ReviewAdapter reviewAdapter = new ReviewAdapter(MovieDetailActivity.this, R.layout.review_detail, reviewList);
-        final ListView listView = findViewById(R.id.list_review);
-        listView.setAdapter(reviewAdapter);
-        reviewAdapter.notifyDataSetChanged();
-
-        Query query3 = databaseReference.child("movies").orderByChild("imdbID").equalTo(movie.getImdbID()).limitToFirst(1);
-
-        query3.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (final DataSnapshot sp : dataSnapshot.getChildren()){
-//                    Movie movie = sp.getValue(Movie.class);
-//                    Toast.makeText(MovieDetailActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
-
-                    Query query4 = databaseReference.child("movies").child(sp.getKey()).child("review");
-
-                    query4.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (final DataSnapshot sp : dataSnapshot.getChildren()){
-                                Review review = sp.getValue(Review.class);
-                                Toast.makeText(MovieDetailActivity.this, review.getText(), Toast.LENGTH_SHORT).show();
-//                                Toast.makeText(MovieDetailActivity.this, sp.getKey(), Toast.LENGTH_SHORT).show();
-//                                Log.d("tes", sp.getKey());
-                                reviewList.add(review);
-                                Log.d("x", review.getText());
-                            }
-                            reviewAdapter.notifyDataSetChanged();
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
     }
 
@@ -335,35 +278,19 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
                 });
                 break;
             case R.id.btn_add_review:
-                Query query1 = databaseReference.child("movies").orderByChild("imdbID").equalTo(movie.getImdbID()).limitToFirst(1);
 
-                query1.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        for (final DataSnapshot sp : dataSnapshot.getChildren()){
-                            databaseReference.child("movies").child(sp.getKey()).child("review").child(sharedPreferences.getString("user", "")).child("text").setValue(txtReview.getText().toString());
-                            databaseReference.child("movies").child(sp.getKey()).child("review").child(sharedPreferences.getString("user", "")).child("rating").setValue(ratingBar.getRating());
-                            Toast.makeText(MovieDetailActivity.this,sp.getKey() , Toast.LENGTH_SHORT).show();
-//                            Toast.makeText(MovieDetailActivity.this,txtReview.getText().toString() , Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
                 break;
             case R.id.btn_show_review:
-                View v = findViewById(R.id.layout_review);
-                if(v.getVisibility() == View.GONE){
-                    v.setVisibility(View.VISIBLE);
-                }else{
-                    v.setVisibility(View.GONE);
-                }
+//                View v = findViewById(R.id.layout_review);
+//                if(v.getVisibility() == View.GONE){
+//                    v.setVisibility(View.VISIBLE);
+//                }else{
+//                    v.setVisibility(View.GONE);
+//                }
 
-
+                Intent intent = new Intent(this, ReviewDetail.class);
+                intent.putExtra("movie", movie);
+                startActivity(intent);
                 break;
         }
     }

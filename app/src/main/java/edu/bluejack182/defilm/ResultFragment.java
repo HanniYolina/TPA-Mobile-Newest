@@ -108,7 +108,9 @@ public class ResultFragment extends Fragment {
         query1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                historySearch.setText(dataSnapshot.getValue().toString());
+                if(dataSnapshot.exists()){
+                    historySearch.setText(dataSnapshot.getValue().toString());
+                }
             }
 
             @Override

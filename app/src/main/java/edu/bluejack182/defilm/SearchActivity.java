@@ -120,22 +120,26 @@ public class SearchActivity extends AppCompatActivity implements SearchFragment.
             case 10:
                 if(resultCode == RESULT_OK && data != null){
                     final ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-//                    Toast.makeText(this, result.get(0), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, result.get(0), Toast.LENGTH_SHORT).show();
 
-                    movieList.removeAll(movieList);
                     Query query1 = FirebaseDatabase.getInstance().getReference( "movies");
 
                     query1.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot sp : dataSnapshot.getChildren()){
-                                Movie movie = sp.getValue(Movie.class);
-                                if(movie.getTitle().toLowerCase().contains(result.get(0))){
-                                    movieList.add(movie);
+                            if(dataSnapshot.exists()){
+                                movieList.removeAll(movieList);
+                                for (DataSnapshot sp : dataSnapshot.getChildren()){
+                                    Movie movie = sp.getValue(Movie.class);
+                                    if(movie.getTitle().toLowerCase().contains(result.get(0))){
+                                        movieList.add(movie);
+                                    }
+                                    sectionsPagerAdapter.setMovieList(movieList);
+                                    sectionsPagerAdapter.notifyDataSetChanged();
                                 }
+
                             }
-                            sectionsPagerAdapter.setMovieList(movieList);
-                            sectionsPagerAdapter.notifyDataSetChanged();
+
                         }
 
                         @Override

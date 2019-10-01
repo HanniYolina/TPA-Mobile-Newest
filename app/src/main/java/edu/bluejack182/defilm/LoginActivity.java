@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final String keyEmail = "email";
     private static final String keyPass = "password";
     private static final String keyUser = "user";
+    private static final String keyName = "username";
     public boolean isLoggedIn;
 
     CallbackManager callbackManager;
@@ -194,6 +195,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     if(user.getEmail().equals(email)){
                         editor.putString(keyUser, sp.getKey() + "");
+                        editor.putString(keyName, user.getUsername());
                         editor.apply();
 
 //                        Toast.makeText(LoginActivity.this, user.getEmail(), Toast.LENGTH_SHORT).show();
@@ -201,7 +203,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
 
-//                Toast.makeText(context, Boolean.toString(check), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, Boolean.toString(check), Toast.LENGTH_SHORT).show();
                 if(!check){
                     String id = databaseReference.push().getKey();
                     databaseReference.child(id).child("email").setValue(email);
@@ -254,6 +256,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if(user.getPassword().equals(enteredPass)){
 //                        Toast.makeText(context, user.getEmail(), Toast.LENGTH_SHORT).show();
                         editor.putString(keyUser, sp.getKey() + "");
+                        editor.putString(keyName, user.getUsername());
                         editor.apply();
 
                         Intent intent = new Intent(context, HomeActivity.class);
@@ -326,7 +329,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             inputUser(account.getEmail(), account.getDisplayName());
 
-//            Toast.makeText(this,"Email: " + account.getEmail(),Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Email: " + account.getEmail(),Toast.LENGTH_LONG).show();
 //            Toast.makeText(this, account.getDisplayName(), Toast.LENGTH_SHORT).show();
         } catch (ApiException e) {
             e.printStackTrace();
