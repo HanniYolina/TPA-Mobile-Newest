@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#2e2f21"
     >
+
+    <TextView
+        android:id="@+id/txt_movie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#a16966"
+        android:textSize="14sp"
+        android:padding="8dp"
+        android:text="Rating"
+        />
+
     <TextView
         android:id="@+id/txt_rating"
         android:layout_width="match_parent"
@@ -41,7 +50,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:visibility="gone"
         >
 
         <Button
@@ -55,4 +63,5 @@
             android:padding="5dp"
             />
     </LinearLayout>
+
 </LinearLayout>

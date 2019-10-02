@@ -77,20 +77,31 @@ public class ReviewRatingFragment extends Fragment {
         }
     }
 
+    MyReviewAdapter reviewAdapter;
+    final List<Review> reviewList = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_review_rating, container, false);
 
-        final List<Review> reviewList = new ArrayList<>();
-        final ReviewAdapter reviewAdapter = new ReviewAdapter(getContext(), R.layout.review_detail, reviewList);
+
+        reviewAdapter = new MyReviewAdapter(this, R.layout.my_review_detail, reviewList);
         final ListView listView = view.findViewById(R.id.list_review);
+
+        listView.setAdapter(reviewAdapter);
+        getDataFromFirebase();
+
+
+        return view;
+    }
+
+    public void getDataFromFirebase(){
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         final SharedPreferences sharedPreferences = getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
 
-        listView.setAdapter(reviewAdapter);
-
+        reviewList.clear();
         Query query = databaseReference.child("movies");
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -99,7 +110,7 @@ public class ReviewRatingFragment extends Fragment {
 
                 for (final DataSnapshot sp : dataSnapshot.getChildren()){
                     Query query2 = databaseReference.child("movies").child(sp.getKey()).child("review");
-
+                    Toast.makeText(getContext(), sp.getKey(), Toast.LENGTH_SHORT).show();
                     query2.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -108,7 +119,7 @@ public class ReviewRatingFragment extends Fragment {
                                     Review r = sp.getValue(Review.class);
                                     reviewList.add(r);
 
-                                    Toast.makeText(getContext(), r.getText(), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getContext(), r.getText(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                             reviewAdapter.notifyDataSetChanged();
@@ -128,7 +139,7 @@ public class ReviewRatingFragment extends Fragment {
 
             }
         });
-        return view;
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

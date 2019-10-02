@@ -114,6 +114,8 @@ public class ReviewDetail extends AppCompatActivity implements View.OnClickListe
                             databaseReference.child("movies").child(sp.getKey()).child("review").child(user).child("text").setValue(txtReview.getText().toString());
                             databaseReference.child("movies").child(sp.getKey()).child("review").child(user).child("rating").setValue(ratingBar.getRating());
                             databaseReference.child("movies").child(sp.getKey()).child("review").child(user).child("user").setValue(sharedPreferences.getString("username", ""));
+                            databaseReference.child("movies").child(sp.getKey()).child("review").child(user).child("movieId").setValue(sp.getKey());
+                            databaseReference.child("movies").child(sp.getKey()).child("review").child(user).child("movieName").setValue(movie.getTitle());
                             getReviewFromDatabase();
                         }
                     }
